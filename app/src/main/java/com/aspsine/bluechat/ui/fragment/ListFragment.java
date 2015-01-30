@@ -2,7 +2,9 @@ package com.aspsine.bluechat.ui.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -92,8 +94,10 @@ public class ListFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DevicesAdapter.DividerItemDecoration(Color.GRAY));
         return view;
     }
 

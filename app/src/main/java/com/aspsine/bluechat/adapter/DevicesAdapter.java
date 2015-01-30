@@ -1,5 +1,7 @@
 package com.aspsine.bluechat.adapter;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -50,7 +52,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
         Device device = mDevices.get(i);
-        if(!TextUtils.isEmpty(device.name)) viewHolder.tvName.setText(device.name);
+        if (!TextUtils.isEmpty(device.name)) viewHolder.tvName.setText(device.name);
     }
 
     @Override
@@ -59,12 +61,12 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
         return mDevices == null ? 0 : mDevices.size();
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         mDevices.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void add(Device device , int position){
+    public void add(Device device, int position) {
         mDevices.add(device);
         notifyItemInserted(position);
     }
@@ -75,8 +77,27 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvName = (TextView)itemView.findViewById(R.id.tvName);
-            ivAvatar = (ImageView)itemView.findViewById(R.id.ivAvatar);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
+        }
+    }
+
+    public static class DividerItemDecoration extends RecyclerView.ItemDecoration {
+        private Paint mPaint;
+
+        public DividerItemDecoration(int color) {
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setColor(color);
+        }
+
+        @Override
+        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            super.onDraw(c, parent, state);
+            for (int i = 0, size = parent.getChildCount(); i < size; i++) {
+                View itemView = parent.getChildAt(i);
+                c.drawLine(itemView.getLeft(), itemView.getBottom(), itemView.getRight(), itemView.getBottom(), mPaint);
+            }
+
         }
     }
 }
