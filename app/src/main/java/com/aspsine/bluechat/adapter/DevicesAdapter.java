@@ -71,7 +71,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
         notifyItemInserted(position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView ivAvatar;
         public TextView tvName;
 
@@ -79,6 +79,10 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            itemView.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View v) {
         }
     }
 

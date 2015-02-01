@@ -96,8 +96,8 @@ public class ListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DevicesAdapter.DividerItemDecoration(getResources().getColor(R.color.style_divider)));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DevicesAdapter.DividerItemDecoration(Color.GRAY));
         return view;
     }
 
