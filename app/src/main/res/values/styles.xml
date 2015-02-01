@@ -6,9 +6,15 @@
         <item name="colorPrimary">@color/style_color_primary</item>
         <item name="colorPrimaryDark">@color/style_color_primary_dark</item>
         <item name="colorAccent">@color/style_color_accent</item>
+
         <item name="android:divider">@color/style_divider</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base" />
+
+    <style name="ToolBarStyle">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
 
 </resources>

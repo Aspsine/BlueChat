@@ -23,21 +23,22 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
     private List<Device> mDevices;
 
-    private ListFragment.OnRecyclerViewItemClickListener mListener;
+    private ListFragment.OnItemClickListener mOnItemClickListener;
+
+    private ListFragment.OnItemLongClickListener mOnItemLongClickListener;
 
     public DevicesAdapter(List<Device> devices) {
 
         mDevices = devices;
     }
 
-    public void setOnRecyclerViewItemClickListener(ListFragment.OnRecyclerViewItemClickListener listener) {
+    public void setOnItemClickListener(final ListFragment.OnItemClickListener listener) {
 
-        mListener = listener;
+        mOnItemClickListener = listener;
     }
 
-    public ListFragment.OnRecyclerViewItemClickListener getOnRecyclerViewItemClickListener() {
-
-        return mListener;
+    public void setOnItemLongClickListener(final ListFragment.OnItemLongClickListener listener) {
+        mOnItemLongClickListener = listener;
     }
 
     @Override
@@ -71,7 +72,8 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
         notifyItemInserted(position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
         public ImageView ivAvatar;
         public TextView tvName;
 
@@ -80,28 +82,21 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
             itemView.setOnClickListener(this);
+            ivAvatar.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
+
         @Override
         public void onClick(View v) {
-        }
-    }
-
-    public static class DividerItemDecoration extends RecyclerView.ItemDecoration {
-        private Paint mPaint;
-
-        public DividerItemDecoration(int color) {
-            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setColor(color);
+            mOnItemClickListener.onItemClick(getPosition(), v);
         }
 
         @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            super.onDraw(c, parent, state);
-            for (int i = 0, size = parent.getChildCount(); i < size; i++) {
-                View itemView = parent.getChildAt(i);
-                c.drawLine(itemView.getLeft(), itemView.getBottom(), itemView.getRight(), itemView.getBottom(), mPaint);
-            }
-
+        public boolean onLongClick(View v) {
+            mOnItemLongClickListener.onItemLongClick(getPosition(), v);
+            return true;
         }
     }
+
+
 }

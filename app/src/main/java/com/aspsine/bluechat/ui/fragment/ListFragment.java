@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.adapter.DevicesAdapter;
 import com.aspsine.bluechat.model.Device;
+import com.aspsine.bluechat.ui.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,9 @@ public class ListFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnRecyclerViewItemClickListener mListener;
+    private OnItemClickListener mOnItemClickListener;
+
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     private static List<Device> mDevices = new ArrayList<Device>();
 
@@ -85,7 +88,8 @@ public class ListFragment extends Fragment {
         }
 
         mAdapter = new DevicesAdapter(mDevices);
-        mAdapter.setOnRecyclerViewItemClickListener(mListener);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
+        mAdapter.setOnItemLongClickListener(mOnItemLongClickListener);
     }
 
     @Override
@@ -93,10 +97,12 @@ public class ListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DevicesAdapter.DividerItemDecoration(getResources().getColor(R.color.style_divider)));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         return view;
     }
@@ -104,21 +110,27 @@ public class ListFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnRecyclerViewItemClickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnRecyclerViewItemClickListener");
+        if (activity instanceof OnItemClickListener) {
+            mOnItemClickListener = (OnItemClickListener) activity;
+        }
+
+        if (activity instanceof OnItemLongClickListener) {
+            mOnItemLongClickListener = (OnItemLongClickListener) activity;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mOnItemClickListener = null;
+        mOnItemLongClickListener = null;
     }
 
-    public interface OnRecyclerViewItemClickListener {
-        public void onRecyclerVieItemClick(int position);
+    public interface OnItemClickListener {
+        public void onItemClick(int position, View view);
+    }
+
+    public interface OnItemLongClickListener {
+        public void onItemLongClick(int position, View view);
     }
 }
