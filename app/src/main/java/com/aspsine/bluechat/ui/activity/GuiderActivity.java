@@ -13,7 +13,7 @@ import com.aspsine.bluechat.ui.fragment.GuiderFragment;
 import com.aspsine.bluechat.ui.fragment.SplashFragment;
 import com.aspsine.bluechat.util.SharedPrefsUtils;
 
-public class GuiderActivity extends ActionBarActivity {
+public class GuiderActivity extends ActionBarActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,10 @@ public class GuiderActivity extends ActionBarActivity {
         fm.beginTransaction().add(R.id.guiderContainer, new SplashFragment(), SplashFragment.TAG).commit();
     }
 
-    void intentToMain() {
+    public void intentToMain() {
+        if(!SharedPrefsUtils.isWelcomeDone(this)){
+            SharedPrefsUtils.markWelcomeDone(this);
+        }
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
