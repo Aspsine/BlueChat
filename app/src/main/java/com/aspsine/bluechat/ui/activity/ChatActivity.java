@@ -1,13 +1,13 @@
 package com.aspsine.bluechat.ui.activity;
 
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.aspsine.bluechat.R;
+import com.aspsine.bluechat.ui.fragment.ChatFragment;
 
 public class ChatActivity extends ActionBarActivity {
 
@@ -20,6 +20,13 @@ public class ChatActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (savedInstanceState == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.chatContainer, ChatFragment.newInstance(), ChatFragment.TAG)
+                    .commit();
+        }
+
     }
 
 
@@ -33,7 +40,7 @@ public class ChatActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
         }

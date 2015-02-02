@@ -6,6 +6,12 @@
 
     <include
         android:id="@+id/actionbarToolbar"
-        layout="@layout/layout_actionbar_toolbar"/>
+        layout="@layout/layout_actionbar_toolbar" />
+
+    <FrameLayout
+        android:id="@+id/chatContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/actionbarToolbar" />
 
 </RelativeLayout>

@@ -10,6 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +20,7 @@
         </activity>
         <activity
             android:name=".ui.activity.ChatActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_chat">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
