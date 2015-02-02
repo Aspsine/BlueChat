@@ -6,13 +6,12 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher"
-        app:border_color="#FF000000" />
+        android:src="@drawable/ic_launcher"/>
 
     <TextView
         android:id="@+id/tvInComing"
