@@ -23,6 +23,6 @@ public class SharedPrefsUtils {
     public static void markWelcomeDone(Context context){
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putBoolean(PREF_WELCOME_DONE, true).commit();
+        sp.edit().putBoolean(PREF_WELCOME_DONE, true).apply();
     }
 }

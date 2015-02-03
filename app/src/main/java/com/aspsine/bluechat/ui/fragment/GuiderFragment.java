@@ -49,7 +49,7 @@ public class GuiderFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.ivAndroidPink:
-                whichOne = "Candy blue.";
+                whichOne = "Candy Pink.";
                 break;
 
             default:
