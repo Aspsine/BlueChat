@@ -1,12 +1,11 @@
 package com.aspsine.bluechat.ui.fragment;
 
 
+import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -15,12 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.adapter.NoticesAdapter;
 import com.aspsine.bluechat.model.Notice;
+
+import org.apache.http.util.LangUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,9 @@ public class ChatFragment extends Fragment
             Toast.makeText(getActivity(), "null", Toast.LENGTH_SHORT).show();
         }
 
-        Notice notice = new Notice(Notice.TYPE_RETURNING, editable.toString());
+        Notice notice = new Notice();
+        notice.setType(Notice.TYPE_RETURNING);
+        notice.setMessage("");
         mNotices.add(notice);
         mAdapter.notifyItemInserted(mNotices.size());
     }
