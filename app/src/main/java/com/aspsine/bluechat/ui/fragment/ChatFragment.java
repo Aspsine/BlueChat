@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.adapter.NoticesAdapter;
@@ -27,29 +29,23 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class ChatFragment extends Fragment
-        implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>{
+        implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = ChatFragment.class.getSimpleName();
 
     private NoticesAdapter mAdapter;
 
-    private static List<Notice> mNotices = new ArrayList<Notice>();
+    private static final List<Notice> mNotices = new ArrayList<Notice>();
 
     private EditText etEditor;
 
     private Button btnSend;
 
-    static {
-        for (int i = 0; i<100; i++){
-            mNotices.add(new Notice(i % 5, i + "hi"));
-        }
-    }
-
     public ChatFragment() {
         // Required empty public constructor
     }
 
-    public static ChatFragment newInstance(){
+    public static ChatFragment newInstance() {
         ChatFragment chatFragment = new ChatFragment();
         return chatFragment;
     }
@@ -80,7 +76,16 @@ public class ChatFragment extends Fragment
 
     @Override
     public void onClick(View v) {
+        Editable editable = etEditor.getText();
+        if (editable != null) {
+            Toast.makeText(getActivity(), "Content: " + editable.toString(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "null", Toast.LENGTH_SHORT).show();
+        }
 
+        Notice notice = new Notice(Notice.TYPE_RETURNING, editable.toString());
+        mNotices.add(notice);
+        mAdapter.notifyItemInserted(mNotices.size());
     }
 
     @Override

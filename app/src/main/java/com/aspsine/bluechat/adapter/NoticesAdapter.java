@@ -21,6 +21,11 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
+    public int getItemCount() {
+        return mNotices == null ? 0 : mNotices.size();
+    }
+
+    @Override
     public int getItemViewType(int position) {
         return mNotices.get(position).type;
     }
@@ -59,10 +64,6 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-    @Override
-    public int getItemCount() {
-        return mNotices == null ? 0 : mNotices.size();
-    }
 
     private View inflate(int resource, ViewGroup parent) {
         return LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
