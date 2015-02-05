@@ -4,9 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.model.Notice;
+import com.aspsine.bluechat.util.DateUtils;
 
 import java.util.List;
 
@@ -27,7 +30,7 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return mNotices.get(position).type;
+        return mNotices.get(position).getType();
     }
 
     @Override
@@ -51,34 +54,67 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case Notice.TYPE_SYSTEM:
                 itemView = inflate(R.layout.item_notice_system, parent);
                 return new SystemViewHolder(itemView);
-
-            case Notice.TYPE_TIME:
-                itemView = inflate(R.layout.item_notice_time, parent);
-                return new TimeViewHolder(itemView);
         }
         return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int viewType = getItemViewType(position);
+        Notice notice = mNotices.get(position);
+        switch (viewType) {
+            case Notice.TYPE_IN_COMING:
+                ((InComingViewHolder) holder).tvTime.setText(DateUtils.formatDate(notice.getTime()));
+                ((InComingViewHolder) holder).tvText.setText(notice.getMessage());
+                break;
 
+            case Notice.TYPE_RETURNING:
+                ((ReturningViewHolder) holder).tvTime.setText(DateUtils.formatDate(notice.getTime()));
+                ((ReturningViewHolder) holder).tvText.setText(notice.getMessage());
+                break;
+
+            case Notice.TYPE_NEWS:
+                holder = (NewsViewHolder) holder;
+                break;
+
+            case Notice.TYPE_SYSTEM:
+                holder = (SystemViewHolder) holder;
+                break;
+
+            default:
+                break;
+        }
     }
 
 
     private View inflate(int resource, ViewGroup parent) {
+
         return LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
     }
 
     public class InComingViewHolder extends RecyclerView.ViewHolder {
+        public ImageView ivAvatar;
+        public TextView tvText;
+        public TextView tvTime;
 
         public InComingViewHolder(View itemView) {
             super(itemView);
+            ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            tvText = (TextView) itemView.findViewById(R.id.tvText);
+            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
         }
     }
 
     public class ReturningViewHolder extends RecyclerView.ViewHolder {
+        public ImageView ivAvatar;
+        public TextView tvText;
+        public TextView tvTime;
+
         public ReturningViewHolder(View itemView) {
             super(itemView);
+            ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            tvText = (TextView) itemView.findViewById(R.id.tvText);
+            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
         }
     }
 
@@ -95,11 +131,5 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public class TimeViewHolder extends RecyclerView.ViewHolder {
-
-        public TimeViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
 
 }

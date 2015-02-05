@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_gravity="left">
 
     <ImageView
-        android:id="@+id/avatar"
+        android:id="@+id/ivAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/tvInComing"
-        android:layout_width="0dp"
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_weight="1"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/ivAvatar"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:textSize="13sp"
+        android:singleLine="true"
+        android:text="1111-11-11" />
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTime"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@+id/ivAvatar"
         android:gravity="left"
         android:text="InComing" />
-</LinearLayout>
+</RelativeLayout>

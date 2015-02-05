@@ -3,6 +3,7 @@ package com.aspsine.bluechat.ui.fragment;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,19 +24,23 @@ import com.aspsine.bluechat.model.Notice;
 import org.apache.http.util.LangUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ChatFragment extends Fragment
-        implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+        implements View.OnClickListener {
 
     public static final String TAG = ChatFragment.class.getSimpleName();
 
-    private NoticesAdapter mAdapter;
-
     private static final List<Notice> mNotices = new ArrayList<Notice>();
+
+    private BluetoothAdapter mBluetoothAdapter;
+
+    private NoticesAdapter mAdapter;
 
     private EditText etEditor;
 
@@ -53,6 +58,13 @@ public class ChatFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if(mBluetoothAdapter == null){
+            Toast.makeText(getActivity(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+        }
+
         mAdapter = new NoticesAdapter(mNotices);
     }
 
@@ -85,24 +97,11 @@ public class ChatFragment extends Fragment
 
         Notice notice = new Notice();
         notice.setType(Notice.TYPE_RETURNING);
-        notice.setMessage("");
+        notice.setTime(new Date());
+        notice.setMessage(editable.toString());
         mNotices.add(notice);
         mAdapter.notifyItemInserted(mNotices.size());
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
+        etEditor.setText("");
     }
 
 

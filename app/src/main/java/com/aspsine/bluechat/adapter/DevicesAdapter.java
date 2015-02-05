@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aspsine.bluechat.R;
+import com.aspsine.bluechat.listener.OnItemClickListener;
+import com.aspsine.bluechat.listener.OnItemLongClickListener;
 import com.aspsine.bluechat.model.Device;
-import com.aspsine.bluechat.ui.fragment.ListFragment;
 
 import java.util.List;
 
@@ -21,21 +22,21 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
     private List<Device> mDevices;
 
-    private ListFragment.OnItemClickListener mOnItemClickListener;
+    private OnItemClickListener mOnItemClickListener;
 
-    private ListFragment.OnItemLongClickListener mOnItemLongClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     public DevicesAdapter(List<Device> devices) {
 
         mDevices = devices;
     }
 
-    public void setOnItemClickListener(final ListFragment.OnItemClickListener listener) {
+    public void setOnItemClickListener(final OnItemClickListener listener) {
 
         mOnItemClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(final ListFragment.OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(final OnItemLongClickListener listener) {
         mOnItemLongClickListener = listener;
     }
 

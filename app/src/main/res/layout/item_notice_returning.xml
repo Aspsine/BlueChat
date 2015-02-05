@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="right"
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvReturning"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="24dp"
-        android:layout_weight="1"
-        android:gravity="right"
-        android:text="Returning" />
-
     <ImageView
-        android:id="@+id/avatar"
+        android:id="@+id/ivAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_launcher" />
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@+id/ivAvatar"
+        android:ellipsize="end"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="1111-11-11"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTime"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_toLeftOf="@+id/ivAvatar"
+        android:gravity="right"
+        android:text="Returning" />
+
+
+</RelativeLayout>

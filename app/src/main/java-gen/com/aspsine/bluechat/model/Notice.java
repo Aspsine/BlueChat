@@ -17,28 +17,23 @@ public class Notice {
     // KEEP FIELDS - put your custom fields here
 
     /**
-     * 接受到的消息
+     * received message
      */
     public static final int TYPE_IN_COMING = 0;
     /**
-     * 发�?�的消息
+     * sent message
      */
     public static final int TYPE_RETURNING = 1;
 
     /**
-     * 新闻
+     * news
      */
     public static final int TYPE_NEWS = 2;
 
     /**
-     * 系统消息
+     * system notification
      */
     public static final int TYPE_SYSTEM = 3;
-
-    /**
-     * 时间
-     */
-    public static final int TYPE_TIME = 4;
     // KEEP FIELDS END
 
     public Notice() {
@@ -91,7 +86,7 @@ public class Notice {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "id: " + this.id + "time: " + this.time + "type: " + this.type + "message: " + this.message;
     }
     // KEEP METHODS END
 

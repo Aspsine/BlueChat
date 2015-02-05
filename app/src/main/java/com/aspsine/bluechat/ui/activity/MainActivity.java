@@ -13,8 +13,7 @@ import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.ui.fragment.ListFragment;
 
 
-public class MainActivity extends ActionBarActivity
-        implements ListFragment.OnItemClickListener, ListFragment.OnItemLongClickListener {
+public class MainActivity extends ActionBarActivity{
 
 
     @Override
@@ -26,12 +25,11 @@ public class MainActivity extends ActionBarActivity
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, ListFragment.newInstance("0", "1"), ListFragment.class.getSimpleName())
+                    .add(R.id.container, ListFragment.newInstance(), ListFragment.TAG)
                     .commit();
 
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,30 +37,5 @@ public class MainActivity extends ActionBarActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onItemClick(int position, View view) {
-        if(view.getId() == R.id.ivAvatar){
-            Toast.makeText(this, "id= " + position + " avatar onClick", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "id= " + position + " onClick", Toast.LENGTH_SHORT).show();
-        }
-
-        startActivity(new Intent(this, ChatActivity.class));
-    }
-
-    @Override
-    public void onItemLongClick(int position, View view) {
-        Toast.makeText(this, "id= " + position + " onLongClick", Toast.LENGTH_SHORT).show();
-    }
 }
