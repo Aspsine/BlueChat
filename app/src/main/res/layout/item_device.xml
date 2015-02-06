@@ -21,6 +21,6 @@
         android:layout_marginLeft="24dp"
         android:textSize="16sp"
         android:layout_toRightOf="@+id/ivAvatar"
-        android:text="Alex Holo" />
+        android:text="UNKNOWN BLUETOOTH DEVICE"/>
 
 </RelativeLayout>

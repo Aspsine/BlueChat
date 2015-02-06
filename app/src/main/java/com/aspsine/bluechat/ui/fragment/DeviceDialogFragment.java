@@ -34,9 +34,17 @@ import java.util.List;
  */
 public class DeviceDialogFragment extends DialogFragment implements OnItemClickListener {
     public static final String TAG = DeviceDialogFragment.class.getSimpleName();
+
+    private static final int MAX_ATTEMPT_NUM = 10;
+
+    private OnPairDeviceListener onPairDeviceListener;
     private BluetoothAdapter mBluetoothAdapter;
     private DevicesAdapter mAdapter;
     private List<Device> mDevices;
+
+    public interface OnPairDeviceListener {
+        void onPair(Device device);
+    }
 
     public static DeviceDialogFragment newInstance() {
         DeviceDialogFragment fragment = new DeviceDialogFragment();
@@ -78,14 +86,7 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getDialog().setTitle("Searching devices...");
-
-        // If we're already discovering, stop it
-        if (mBluetoothAdapter.isDiscovering()) {
-            mBluetoothAdapter.cancelDiscovery();
-        }
-
-        // Request discover from BluetoothAdapter
-        mBluetoothAdapter.startDiscovery();
+        startDiscovery();
     }
 
     @Override
@@ -102,6 +103,43 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
     public void onDetach() {
         super.onDetach();
         getActivity().unregisterReceiver(mReceiver);
+        cancelDiscovery();
+    }
+
+    @Override
+    public void onItemClick(int position, View view) {
+
+        ((OnPairDeviceListener) getActivity().getFragmentManager().findFragmentByTag(ListFragment.TAG)).onPair(mDevices.get(position));
+        this.dismissAllowingStateLoss();
+    }
+
+    private void startDiscovery() {
+
+        setProgressVisibility(true);
+
+        // If we're already discovering, stop it
+        if (mBluetoothAdapter.isDiscovering()) {
+            mBluetoothAdapter.cancelDiscovery();
+        }
+
+        // Request discover from BluetoothAdapter
+        int numberOfTimes = 0;
+        while (!mBluetoothAdapter.startDiscovery()) {
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            if (numberOfTimes++ > MAX_ATTEMPT_NUM) {
+                setProgressVisibility(false);
+                Toast.makeText(getActivity(), "Searching Device Failed!", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+    }
+
+    private void cancelDiscovery() {
         if (mBluetoothAdapter != null) {
             mBluetoothAdapter.cancelDiscovery();
         }
@@ -121,24 +159,35 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
                 }
                 if (bluetoothDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
                     Device device = new Device();
-                    device.setName(bluetoothDevice.getName());
+                    device.setName(bluetoothDevice.getName() != null ? bluetoothDevice.getName() : "UNKNOWN BLUETOOTH DEVICE");
                     device.setAddress(bluetoothDevice.getAddress());
                     device.setId(String.valueOf(bluetoothDevice.getUuids()));
                     mDevices.add(device);
                     mAdapter.notifyItemInserted(mDevices.size() - 1);
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                ((ProgressBar)getDialog().getWindow().findViewById(R.id.progressBar)).setVisibility(View.GONE);
+                setProgressVisibility(false);
                 if (mDevices.size() == 0) {
-                    Toast.makeText(getActivity(), "no device found!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No device found! Please check and try again.", Toast.LENGTH_SHORT).show();
+                    getDialog().dismiss();
+                } else {
+                    int deviceNum = mDevices.size();
+                    String str = "Device Was Found";
+                    if (deviceNum > 1) {
+                        str = "Devices Were Found";
+                    }
+                    getDialog().setTitle(deviceNum + str);
                 }
             }
         }
     };
 
-    @Override
-    public void onItemClick(int position, View view) {
 
-        Toast.makeText(getActivity(), mDevices.get(position).getAddress(), Toast.LENGTH_LONG).show();
+
+    private void setProgressVisibility(boolean isShow) {
+
+        ((ProgressBar) getDialog().getWindow().findViewById(R.id.progressBar)).setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
+
+
 }

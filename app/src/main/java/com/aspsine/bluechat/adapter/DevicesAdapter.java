@@ -87,11 +87,13 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
+            if (mOnItemClickListener == null) return;
             mOnItemClickListener.onItemClick(getPosition(), v);
         }
 
         @Override
         public boolean onLongClick(View v) {
+            if (mOnItemLongClickListener == null) return false;
             mOnItemLongClickListener.onItemLongClick(getPosition(), v);
             return true;
         }
