@@ -5,6 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
-    android:dividerHeight="1dp"
-    android:divider="@android:color/darker_gray"
     tools:context="com.aspsine.bluechat.ui.fragment.ListFragment" />
