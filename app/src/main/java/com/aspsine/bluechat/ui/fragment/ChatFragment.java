@@ -93,6 +93,7 @@ public class ChatFragment extends Fragment
             Toast.makeText(getActivity(), "Content: " + editable.toString(), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "null", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Notice notice = new Notice();

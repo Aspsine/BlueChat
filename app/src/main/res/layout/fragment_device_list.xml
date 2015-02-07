@@ -5,4 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
-    tools:context="com.aspsine.bluechat.ui.fragment.ListFragment" />
+    tools:context="com.aspsine.bluechat.ui.fragment.DeviceListFragment" />

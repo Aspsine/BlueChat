@@ -3,13 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/action_fresh"
+        android:id="@+id/action_searching"
         android:orderInCategory="100"
-        android:title="Fresh"
-        app:showAsAction = "ifRoom"/>
+        android:icon = "@android:drawable/ic_menu_search"
+        android:title="Searching"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_discoverable"
+        android:orderInCategory="200"
+        android:title="Discoverable"
+        android:icon="@android:drawable/ic_menu_mylocation"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 

@@ -28,26 +28,28 @@ import com.aspsine.bluechat.listener.OnItemLongClickListener;
 import com.aspsine.bluechat.model.Device;
 import com.aspsine.bluechat.ui.activity.ChatActivity;
 import com.aspsine.bluechat.ui.widget.DividerItemDecoration;
-import com.aspsine.bluechat.util.BluetoothService;
+import com.aspsine.bluechat.service.BluetoothService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 
-public class ListFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener, DeviceDialogFragment.OnPairDeviceListener {
+public class DeviceListFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener, DeviceDialogFragment.OnPairDeviceListener {
 
-    public static final String TAG = ListFragment.class.getSimpleName();
+    public static final String TAG = DeviceListFragment.class.getSimpleName();
 
     public static final int REQUEST_ENABLE_BT = 0x100;
 
-    public static final int MESSAGE_DEVICE_NAME = 0x100;
+    public static final int MESSAGE_CONNECTED = 0x100;
     public static final int MESSAGE_READ = 0x200;
     public static final int MESSAGE_WRITE = 0x300;
     public static final int MESSAGE_TOAST = 0x400;
 
-    public static final String DEVICE_NAME = "device_name";
+    public static final String EXTRA_DEVICE = "device_name";
     public static final String TOAST = "toast";
+
+    private static final int DISCOVERABLE_DURATION = 500;
 
     private BluetoothService mBluetoothService;
 
@@ -61,8 +63,8 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
 
     private ProgressDialog progressDialog;
 
-    public static ListFragment newInstance() {
-        ListFragment fragment = new ListFragment();
+    public static DeviceListFragment newInstance() {
+        DeviceListFragment fragment = new DeviceListFragment();
         return fragment;
     }
 
@@ -70,7 +72,7 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ListFragment() {
+    public DeviceListFragment() {
     }
 
 
@@ -93,7 +95,7 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_device_list, container, false);
         progressDialog = new ProgressDialog(getActivity());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
@@ -116,7 +118,7 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         } else {
             setupDevices();
-            if(mBluetoothService == null){
+            if (mBluetoothService == null) {
                 mBluetoothService = new BluetoothService(mHandler);
             }
         }
@@ -136,9 +138,15 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
             return true;
         }
 
-        if (id == R.id.action_fresh) {
+        if (id == R.id.action_searching) {
             Toast.makeText(getActivity(), "action_fresh", Toast.LENGTH_SHORT).show();
             showAvailableDevices();
+            return true;
+        }
+
+        if (id == R.id.action_discoverable) {
+            Toast.makeText(getActivity(), "action_fresh", Toast.LENGTH_SHORT).show();
+            ensureDiscoverable();
             return true;
         }
 
@@ -147,13 +155,14 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_ENABLE_BT){
-            if(requestCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (requestCode == Activity.RESULT_OK) {
                 setupDevices();
-            }else {
-                Toast.makeText(getActivity(),"Please turn on the bluetooth and try again.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Please turn on the bluetooth and try again.", Toast.LENGTH_LONG).show();
             }
         }
+
     }
 
     @Override
@@ -181,13 +190,15 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
 
     }
 
-    private final Handler mHandler = new Handler(){
+    private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
-                case MESSAGE_DEVICE_NAME:
-                    String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                    Toast.makeText(getActivity(), "Connected to" + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+            switch (msg.what) {
+                case MESSAGE_CONNECTED:
+                    String bluetoothDevice = msg.getData().getString(EXTRA_DEVICE);
+                    Toast.makeText(getActivity(), "Connected to" + bluetoothDevice, Toast.LENGTH_SHORT).show();
+//                    mAdapter.add(changeBluetoothDeviceToDevice(bluetoothDevice), mDevices.size());
+                    progressDialog.dismiss();
                     break;
 
             }
@@ -199,16 +210,20 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice pairedDevice : pairedDevices) {
-                Device device = new Device();
-                device.setName(pairedDevice.getName());
-                device.setAddress(pairedDevice.getAddress());
-                device.setId(String.valueOf(pairedDevice.getUuids()));
-                mDevices.add(device);
+                mDevices.add(changeBluetoothDeviceToDevice(pairedDevice));
             }
             mAdapter.notifyDataSetChanged();
         } else {
             showAvailableDevices();
             Toast.makeText(getActivity(), "No device have been paired!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ensureDiscoverable() {
+        if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION);
+            startActivity(discoverableIntent);
         }
     }
 
@@ -221,12 +236,19 @@ public class ListFragment extends Fragment implements OnItemClickListener, OnIte
         DeviceDialogFragment.newInstance().show(ft, DeviceDialogFragment.TAG);
     }
 
-    private void connectDevice(Device device){
+    private void connectDevice(Device device) {
         String address = device.getAddress();
         BluetoothDevice btDevice = mBluetoothAdapter.getRemoteDevice(address);
         mBluetoothService.connect(btDevice);
     }
 
-
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+    private Device changeBluetoothDeviceToDevice(BluetoothDevice btDevice){
+        Device device = new Device();
+        device.setName(btDevice.getName() != null ? btDevice.getName() : "UNKNOWN BLUETOOTH DEVICE");
+        device.setAddress(btDevice.getAddress());
+        device.setId(String.valueOf(btDevice.getUuids()));
+        return device;
+    }
 
 }

@@ -109,7 +109,7 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
     @Override
     public void onItemClick(int position, View view) {
 
-        ((OnPairDeviceListener) getActivity().getFragmentManager().findFragmentByTag(ListFragment.TAG)).onPair(mDevices.get(position));
+        ((OnPairDeviceListener) getActivity().getFragmentManager().findFragmentByTag(DeviceListFragment.TAG)).onPair(mDevices.get(position));
         this.dismissAllowingStateLoss();
     }
 
@@ -158,12 +158,7 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
                     }
                 }
                 if (bluetoothDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    Device device = new Device();
-                    device.setName(bluetoothDevice.getName() != null ? bluetoothDevice.getName() : "UNKNOWN BLUETOOTH DEVICE");
-                    device.setAddress(bluetoothDevice.getAddress());
-                    device.setId(String.valueOf(bluetoothDevice.getUuids()));
-                    mDevices.add(device);
-                    mAdapter.notifyItemInserted(mDevices.size() - 1);
+                    mAdapter.add(changeBluetoothDeviceToDevice(bluetoothDevice), mDevices.size());
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressVisibility(false);
@@ -182,7 +177,14 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
         }
     };
 
-
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+    private Device changeBluetoothDeviceToDevice(BluetoothDevice btDevice){
+        Device device = new Device();
+        device.setName(btDevice.getName() != null ? btDevice.getName() : "UNKNOWN BLUETOOTH DEVICE");
+        device.setAddress(btDevice.getAddress());
+        device.setId(String.valueOf(btDevice.getUuids()));
+        return device;
+    }
 
     private void setProgressVisibility(boolean isShow) {
 

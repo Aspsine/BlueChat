@@ -64,21 +64,23 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Notice notice = mNotices.get(position);
         switch (viewType) {
             case Notice.TYPE_IN_COMING:
-                ((InComingViewHolder) holder).tvTime.setText(DateUtils.formatDate(notice.getTime()));
-                ((InComingViewHolder) holder).tvText.setText(notice.getMessage());
+                InComingViewHolder inComingViewHolder = (InComingViewHolder) holder;
+                inComingViewHolder.tvTime.setText(DateUtils.formatDate(notice.getTime()));
+                inComingViewHolder.tvText.setText(notice.getMessage());
                 break;
 
             case Notice.TYPE_RETURNING:
-                ((ReturningViewHolder) holder).tvTime.setText(DateUtils.formatDate(notice.getTime()));
-                ((ReturningViewHolder) holder).tvText.setText(notice.getMessage());
+                ReturningViewHolder returningViewHolder = (ReturningViewHolder) holder;
+                returningViewHolder.tvTime.setText(DateUtils.formatDate(notice.getTime()));
+                returningViewHolder.tvText.setText(notice.getMessage());
                 break;
 
             case Notice.TYPE_NEWS:
-                holder = (NewsViewHolder) holder;
+                NewsViewHolder newsViewHolder = (NewsViewHolder) holder;
                 break;
 
             case Notice.TYPE_SYSTEM:
-                holder = (SystemViewHolder) holder;
+                SystemViewHolder systemViewHolder = (SystemViewHolder) holder;
                 break;
 
             default:

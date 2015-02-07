@@ -1,4 +1,4 @@
-package com.aspsine.bluechat.util;
+package com.aspsine.bluechat.service;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.aspsine.bluechat.ui.fragment.ListFragment;
+import com.aspsine.bluechat.ui.fragment.DeviceListFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,7 +94,12 @@ public class BluetoothService {
         }
 
         mConnectThread = new ConnectThread(device);
-        mConnectThread.start();
+        try{
+            mConnectThread.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         setState(STATE_CONNECTING);
     }
 
@@ -116,18 +121,18 @@ public class BluetoothService {
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
 
-        Message msg = mHandler.obtainMessage(ListFragment.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(DeviceListFragment.MESSAGE_CONNECTED);
         Bundle bundle = new Bundle();
-        bundle.putString(ListFragment.DEVICE_NAME, device.getName());
+        bundle.putString(DeviceListFragment.EXTRA_DEVICE, device.getName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
         setState(STATE_CONNECTED);
     }
 
     private void connectionFailed() {
-        Message msg = mHandler.obtainMessage(ListFragment.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(DeviceListFragment.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(ListFragment.TOAST, "Unable to connect device");
+        bundle.putString(DeviceListFragment.TOAST, "Unable to connect device");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -137,9 +142,9 @@ public class BluetoothService {
 
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(ListFragment.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(DeviceListFragment.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(ListFragment.TOAST, "Device connection was lost");
+        bundle.putString(DeviceListFragment.TOAST, "Device connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -291,7 +296,7 @@ public class BluetoothService {
             while (true) {
                 try {
                     bytes = mmInputStream.read(buffer);
-                    mHandler.obtainMessage(ListFragment.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    mHandler.obtainMessage(DeviceListFragment.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
                     e.printStackTrace();
                     connectionLost();
@@ -305,7 +310,7 @@ public class BluetoothService {
             try {
                 mmOutpuStream.write(buffer);
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(ListFragment.MESSAGE_WRITE, -1, -1, buffer)
+                mHandler.obtainMessage(DeviceListFragment.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();
             } catch (IOException e) {
                 e.printStackTrace();
