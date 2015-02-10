@@ -14,25 +14,25 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/tvTime"
+        android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="12dp"
         android:layout_toRightOf="@+id/ivAvatar"
         android:ellipsize="end"
         android:gravity="left"
         android:textSize="13sp"
         android:singleLine="true"
-        android:text="1111-11-11" />
+        android:text="Blue" />
 
     <TextView
         android:id="@+id/tvText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTime"
-        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/tvName"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
-        android:padding="4dp"
+        android:padding="12dp"
         android:background="@drawable/incoming"
         android:layout_toRightOf="@+id/ivAvatar"
         android:gravity="left"

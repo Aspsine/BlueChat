@@ -111,7 +111,8 @@ public class ChatFragment extends Fragment
             super.handleMessage(msg);
             switch (msg.what) {
                 case DeviceListFragment.MESSAGE_READ:
-                    byte[] readBuf = (byte[])msg.obj;
+                    addTime();
+                    byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Notice read = new Notice();
@@ -122,6 +123,7 @@ public class ChatFragment extends Fragment
                     mAdapter.notifyItemInserted(mNotices.size());
                     break;
                 case DeviceListFragment.MESSAGE_WRITE:
+                    addTime();
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
@@ -138,4 +140,14 @@ public class ChatFragment extends Fragment
             }
         }
     };
+
+    void addTime() {
+        if(mNotices.size()%4 == 0){
+            Notice time = new Notice();
+            time.setType(Notice.TYPE_TIME);
+            time.setTime(new Date());
+            mNotices.add(time);
+            mAdapter.notifyItemInserted(mNotices.size());
+        }
+    }
 }

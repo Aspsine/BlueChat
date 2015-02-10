@@ -39,6 +39,10 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         View itemView = null;
 
         switch (viewType) {
+            case Notice.TYPE_TIME:
+                itemView= inflate(R.layout.item_notice_time, parent);
+                return new TimeViewHolder(itemView);
+
             case Notice.TYPE_IN_COMING:
                 itemView = inflate(R.layout.item_notice_incoming, parent);
                 return new InComingViewHolder(itemView);
@@ -63,15 +67,18 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int viewType = getItemViewType(position);
         Notice notice = mNotices.get(position);
         switch (viewType) {
+            case Notice.TYPE_TIME:
+                TimeViewHolder timeViewHolder = (TimeViewHolder) holder;
+                timeViewHolder.tvTime.setText(DateUtils.formatDate(notice.getTime()));
+                break;
+
             case Notice.TYPE_IN_COMING:
                 InComingViewHolder inComingViewHolder = (InComingViewHolder) holder;
-                inComingViewHolder.tvTime.setText(DateUtils.formatDate(notice.getTime()));
                 inComingViewHolder.tvText.setText(notice.getMessage());
                 break;
 
             case Notice.TYPE_RETURNING:
                 ReturningViewHolder returningViewHolder = (ReturningViewHolder) holder;
-                returningViewHolder.tvTime.setText(DateUtils.formatDate(notice.getTime()));
                 returningViewHolder.tvText.setText(notice.getMessage());
                 break;
 
@@ -94,29 +101,38 @@ public class NoticesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
     }
 
+
+    public class TimeViewHolder extends RecyclerView.ViewHolder{
+        public TextView tvTime;
+        public TimeViewHolder(View itemView) {
+            super(itemView);
+            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+        }
+    }
+
     public class InComingViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivAvatar;
         public TextView tvText;
-        public TextView tvTime;
+        public TextView tvName;
 
         public InComingViewHolder(View itemView) {
             super(itemView);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
             tvText = (TextView) itemView.findViewById(R.id.tvText);
-            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
         }
     }
 
     public class ReturningViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivAvatar;
         public TextView tvText;
-        public TextView tvTime;
+        public TextView tvName;
 
         public ReturningViewHolder(View itemView) {
             super(itemView);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
             tvText = (TextView) itemView.findViewById(R.id.tvText);
-            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
         }
     }
 

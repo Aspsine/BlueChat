@@ -4,6 +4,7 @@ package com.aspsine.bluechat.model;
 
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
+
 /**
  * Entity mapped to table NOTICE.
  */
@@ -17,23 +18,27 @@ public class Notice {
     // KEEP FIELDS - put your custom fields here
 
     /**
+     * time
+     */
+    public static final int TYPE_TIME = 0;
+    /**
      * received message
      */
-    public static final int TYPE_IN_COMING = 0;
+    public static final int TYPE_IN_COMING = 1;
     /**
      * sent message
      */
-    public static final int TYPE_RETURNING = 1;
+    public static final int TYPE_RETURNING = 2;
 
     /**
      * news
      */
-    public static final int TYPE_NEWS = 2;
+    public static final int TYPE_NEWS = 3;
 
     /**
      * system notification
      */
-    public static final int TYPE_SYSTEM = 3;
+    public static final int TYPE_SYSTEM = 4;
     // KEEP FIELDS END
 
     public Notice() {
