@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="right"
     android:orientation="horizontal"
     android:padding="16dp">
 
@@ -11,7 +9,8 @@
         android:id="@+id/ivAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_launcher" />
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_launcher_pink" />
 
     <TextView
         android:id="@+id/tvTime"

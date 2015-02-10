@@ -26,9 +26,9 @@ import com.aspsine.bluechat.adapter.DevicesAdapter;
 import com.aspsine.bluechat.listener.OnItemClickListener;
 import com.aspsine.bluechat.listener.OnItemLongClickListener;
 import com.aspsine.bluechat.model.Device;
+import com.aspsine.bluechat.service.BluetoothService;
 import com.aspsine.bluechat.ui.activity.ChatActivity;
 import com.aspsine.bluechat.ui.widget.DividerItemDecoration;
-import com.aspsine.bluechat.service.BluetoothService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +41,19 @@ public class DeviceListFragment extends Fragment implements OnItemClickListener,
 
     public static final int REQUEST_ENABLE_BT = 0x100;
 
-    public static final int MESSAGE_CONNECTED = 0x100;
+    public static final int MESSAGE_STATE_CHANGE = 0x000;
+    public static final int MESSAGE_DEVICE = 0x100;
     public static final int MESSAGE_READ = 0x200;
     public static final int MESSAGE_WRITE = 0x300;
     public static final int MESSAGE_TOAST = 0x400;
+
 
     public static final String EXTRA_DEVICE = "device_name";
     public static final String TOAST = "toast";
 
     private static final int DISCOVERABLE_DURATION = 500;
 
-    private BluetoothService mBluetoothService;
+//    private BluetoothService mBluetoothService;
 
     private List<Device> mDevices;
 
@@ -118,9 +120,7 @@ public class DeviceListFragment extends Fragment implements OnItemClickListener,
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         } else {
             setupDevices();
-            if (mBluetoothService == null) {
-                mBluetoothService = new BluetoothService(mHandler);
-            }
+            BluetoothService.getInstance(mHandler).start();
         }
     }
 
@@ -194,11 +194,41 @@ public class DeviceListFragment extends Fragment implements OnItemClickListener,
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case MESSAGE_CONNECTED:
-                    String bluetoothDevice = msg.getData().getString(EXTRA_DEVICE);
-                    Toast.makeText(getActivity(), "Connected to" + bluetoothDevice, Toast.LENGTH_SHORT).show();
-//                    mAdapter.add(changeBluetoothDeviceToDevice(bluetoothDevice), mDevices.size());
+                case MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothService.STATE_NONE:
+
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+
+                            break;
+                        case BluetoothService.STATE_CONNECTED:
+
+                            break;
+                    }
+
+                    break;
+
+                case MESSAGE_DEVICE:
+                    BluetoothDevice bluetoothDevice = msg.getData().getParcelable(EXTRA_DEVICE);
+                    for (Device device : mDevices) {
+                        if (device.getAddress().equals(bluetoothDevice.getAddress())) {
+                            Toast.makeText(getActivity(), "The device" + device.getName() + " has been paired!", Toast.LENGTH_SHORT);
+                            return;
+                        }
+                    }
+                    mAdapter.add(changeBluetoothDeviceToDevice(bluetoothDevice), mDevices.size());
+                    Toast.makeText(getActivity(), "Connected to " + bluetoothDevice.getName() + ": " + bluetoothDevice.getAddress(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
+                    break;
+                case MESSAGE_TOAST:
+                    Toast.makeText(getActivity(), msg.getData().getString(TOAST), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), "default", Toast.LENGTH_SHORT).show();
                     break;
 
             }
@@ -239,11 +269,11 @@ public class DeviceListFragment extends Fragment implements OnItemClickListener,
     private void connectDevice(Device device) {
         String address = device.getAddress();
         BluetoothDevice btDevice = mBluetoothAdapter.getRemoteDevice(address);
-        mBluetoothService.connect(btDevice);
+        BluetoothService.getInstance(mHandler).connect(btDevice);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    private Device changeBluetoothDeviceToDevice(BluetoothDevice btDevice){
+    private Device changeBluetoothDeviceToDevice(BluetoothDevice btDevice) {
         Device device = new Device();
         device.setName(btDevice.getName() != null ? btDevice.getName() : "UNKNOWN BLUETOOTH DEVICE");
         device.setAddress(btDevice.getAddress());

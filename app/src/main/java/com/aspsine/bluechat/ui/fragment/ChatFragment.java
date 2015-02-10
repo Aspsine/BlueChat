@@ -1,12 +1,12 @@
 package com.aspsine.bluechat.ui.fragment;
 
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.LoaderManager;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -20,11 +20,9 @@ import android.widget.Toast;
 import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.adapter.NoticesAdapter;
 import com.aspsine.bluechat.model.Notice;
-
-import org.apache.http.util.LangUtils;
+import com.aspsine.bluechat.service.BluetoothService;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class ChatFragment extends Fragment
 
     public static final String TAG = ChatFragment.class.getSimpleName();
 
-    private static final List<Notice> mNotices = new ArrayList<Notice>();
+    private List<Notice> mNotices;
 
     private BluetoothAdapter mBluetoothAdapter;
 
@@ -56,15 +54,22 @@ public class ChatFragment extends Fragment
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        BluetoothService.getInstance(mHandler);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if(mBluetoothAdapter == null){
+        if (mBluetoothAdapter == null) {
             Toast.makeText(getActivity(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
         }
 
+        mNotices = new ArrayList<Notice>();
         mAdapter = new NoticesAdapter(mNotices);
     }
 
@@ -96,14 +101,41 @@ public class ChatFragment extends Fragment
             return;
         }
 
-        Notice notice = new Notice();
-        notice.setType(Notice.TYPE_RETURNING);
-        notice.setTime(new Date());
-        notice.setMessage(editable.toString());
-        mNotices.add(notice);
-        mAdapter.notifyItemInserted(mNotices.size());
+        BluetoothService.getInstance(mHandler).write(editable.toString().getBytes());
         etEditor.setText("");
     }
 
-
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case DeviceListFragment.MESSAGE_READ:
+                    byte[] readBuf = (byte[])msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Notice read = new Notice();
+                    read.setType(Notice.TYPE_IN_COMING);
+                    read.setTime(new Date());
+                    read.setMessage(readMessage);
+                    mNotices.add(read);
+                    mAdapter.notifyItemInserted(mNotices.size());
+                    break;
+                case DeviceListFragment.MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    Notice write = new Notice();
+                    write.setType(Notice.TYPE_RETURNING);
+                    write.setTime(new Date());
+                    write.setMessage(writeMessage);
+                    mNotices.add(write);
+                    mAdapter.notifyItemInserted(mNotices.size());
+                    break;
+                default:
+                    Toast.makeText(getActivity(), "hi", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 }

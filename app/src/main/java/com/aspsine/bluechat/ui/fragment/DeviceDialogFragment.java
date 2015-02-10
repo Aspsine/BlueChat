@@ -37,7 +37,6 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
 
     private static final int MAX_ATTEMPT_NUM = 10;
 
-    private OnPairDeviceListener onPairDeviceListener;
     private BluetoothAdapter mBluetoothAdapter;
     private DevicesAdapter mAdapter;
     private List<Device> mDevices;
@@ -85,7 +84,7 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getDialog().setTitle("Searching devices...");
+        setDialogTitle("Searching devices...");
         startDiscovery();
     }
 
@@ -171,7 +170,7 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
                     if (deviceNum > 1) {
                         str = "Devices Were Found";
                     }
-                    getDialog().setTitle(deviceNum + str);
+                    setDialogTitle(deviceNum + str);
                 }
             }
         }
@@ -186,9 +185,19 @@ public class DeviceDialogFragment extends DialogFragment implements OnItemClickL
         return device;
     }
 
-    private void setProgressVisibility(boolean isShow) {
+    private void setDialogTitle(String title){
+        Dialog dialog = getDialog();
+        if(dialog != null){
+            dialog.setTitle(title);
+        }
+    }
 
-        ((ProgressBar) getDialog().getWindow().findViewById(R.id.progressBar)).setVisibility(isShow ? View.VISIBLE : View.GONE);
+    private void setProgressVisibility(boolean isShow) {
+        Dialog dialog = getDialog();
+        if(dialog != null){
+            ((ProgressBar) getDialog().getWindow().findViewById(R.id.progressBar))
+                    .setVisibility(isShow ? View.VISIBLE : View.GONE);
+        }
     }
 
 

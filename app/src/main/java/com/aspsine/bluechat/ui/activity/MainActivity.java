@@ -11,7 +11,6 @@ import com.aspsine.bluechat.ui.fragment.DeviceListFragment;
 
 public class MainActivity extends ActionBarActivity{
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +22,8 @@ public class MainActivity extends ActionBarActivity{
                     .beginTransaction()
                     .add(R.id.container, DeviceListFragment.newInstance(), DeviceListFragment.TAG)
                     .commit();
-
         }
+
     }
 
     @Override
@@ -33,5 +32,16 @@ public class MainActivity extends ActionBarActivity{
         return true;
     }
 
+//    ServiceConnection connection = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//
+//        }
+//    };
 
 }

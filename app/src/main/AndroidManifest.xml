@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -21,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name=".ui.activity.ChatActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -34,9 +35,9 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop"></activity>
 
-        </activity>
     </application>
 
 </manifest>
