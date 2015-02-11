@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.aspsine.bluechat.R;
 import com.aspsine.bluechat.ui.activity.GuiderActivity;
+import com.aspsine.bluechat.util.SharedPrefsUtils;
 
 /**
  * Created by sf on 2015/2/2.
@@ -46,16 +47,20 @@ public class GuiderFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.ivAndroidBlue:
                 whichOne = "Awesome blue.";
+                SharedPrefsUtils.markRole(getActivity(), SharedPrefsUtils.ROLE_BLUE);
                 break;
 
             case R.id.ivAndroidPink:
                 whichOne = "Candy Pink.";
+                SharedPrefsUtils.markRole(getActivity(), SharedPrefsUtils.ROLE_PINK);
                 break;
 
             default:
                 return;
         }
-
+        if(!SharedPrefsUtils.isWelcomeDone(getActivity())){
+            SharedPrefsUtils.markWelcomeDone(getActivity());
+        }
         Toast.makeText(getActivity(), "Your role is " + whichOne, Toast.LENGTH_LONG).show();
         ((GuiderActivity) getActivity()).intentToMain();
     }
