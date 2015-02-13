@@ -21,12 +21,14 @@ import java.util.UUID;
  * Created by Aspsine on 2015/2/5.
  */
 public class BluetoothService {
+    private static final String TAG = BluetoothService.class.getSimpleName();
+
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-    private static final String TAG = BluetoothService.class.getSimpleName();
+
     // Unique UUID for this application
     private static final UUID MY_UUID_SECURE =
             UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
